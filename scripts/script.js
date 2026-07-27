@@ -18,8 +18,15 @@ function setupUploadTriggers() {
     const triggerUpload = () => fileInput.click();
 
     // Attach to your existing plus buttons
-    document.querySelector('.main_card-add').onclick = triggerUpload;
-    document.querySelector('.adding').onclick = triggerUpload;
+    const mainCardAdd = document.querySelector('.main_card-add');
+    if (mainCardAdd) {
+        mainCardAdd.onclick = triggerUpload;
+    }
+
+    const addingBtn = document.querySelector('.adding');
+    if (addingBtn) {
+        addingBtn.onclick = triggerUpload;
+    }
 
     // Handle file selection
     fileInput.addEventListener('change', async (e) => {
