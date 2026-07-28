@@ -167,26 +167,30 @@ function applyImage(card) {
   card.style.backgroundImage = `url('https://i.pinimg.com/1200x/aa/b5/a0/aab5a0470f6c56f2504574cfe246f918.jpg')`;
 }
 async function uploadImage(file) {
-    try {
-        // 1. Ask your Vercel backend for the secure tokens
-        // REPLACE THIS with the Production URL Vercel gave you in Step 3!
-        const authResponse = await fetch('https://bff-album.vercel.app/api/auth'); 
-        const authData = await authResponse.json();
+  const imagekit = new ImageKit({
+    publicKey: "public_+bidkA27fJVGrKKq8xYge8xiSOU=",
+    urlEndpoint: "https://ik.imagekit.io/cozycap"
+  });
+  try {
+      // 1. Ask your Vercel backend for the secure tokens
+      // REPLACE THIS with the Production URL Vercel gave you in Step 3!
+      const authResponse = await fetch('https://bff-album.vercel.app/api/auth'); 
+      const authData = await authResponse.json();
 
-        // 2. Upload to ImageKit using those secure parameters
-        const result = await imagekit.upload({
-            file: file,
-            fileName: file.name,
-            tags: ["bff-album"],
-            signature: authData.signature,
-            token: authData.token,
-            expire: authData.expire
-        });
+      // 2. Upload to ImageKit using those secure parameters
+      const result = await imagekit.upload({
+          file: file,
+          fileName: file.name,
+          tags: ["bff-album"],
+          signature: authData.signature,
+          token: authData.token,
+          expire: authData.expire
+      });
 
-        createCard(result.url, result.fileId);
-        newFunc(); 
-    } catch (error) {
-        console.error("Upload failed:", error);
-        alert("Failed to upload image.");
-    }
+      createCard(result.url, result.fileId);
+      newFunc(); 
+  } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Failed to upload image.");
+  }
 }
