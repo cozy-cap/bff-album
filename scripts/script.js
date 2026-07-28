@@ -158,7 +158,7 @@ function applyImage(card) {
   //TODO: make read image from imagekit
   card.style.backgroundImage = `url('https://i.pinimg.com/1200x/aa/b5/a0/aab5a0470f6c56f2504574cfe246f918.jpg')`;
 }
-imageUpload(file, name) {
+function imageUpload(file, name) {
   var imagekit = new ImageKit({
     publicKey: "public_+bidkA27fJVGrKKq8xYge8xiSOU=",
     urlEndpoint: "https://ik.imagekit.io/cozycap",
