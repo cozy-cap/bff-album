@@ -16,7 +16,7 @@ function newFunc() {
     element1.style.setProperty('display', 'none');
     element2.style.setProperty('display', 'flex');
   }
-  else {
+  else if (element1 !== null && element2 !== null) {
     element1.style.setProperty('display', 'inline');
     element2.style.setProperty('display', 'none');
   }
