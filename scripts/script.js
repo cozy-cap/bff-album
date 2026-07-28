@@ -228,6 +228,53 @@ function openCard(element) {
   };
   image.className = 'preview_image';
   image.src = cleanUrl;
+  // --- START PINCH-TO-ZOOM LOGIC ---
+    let currentScale = 1;
+    let initialPinchDistance = null;
+
+    image.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault(); // Stop any leftover browser behavior
+            // Calculate the initial distance between the two fingers
+            initialPinchDistance = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+        }
+    });
+
+    image.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && initialPinchDistance !== null) {
+            e.preventDefault();
+            // Calculate how far the fingers have moved apart/together
+            const currentDistance = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+            
+            const scale = currentDistance / initialPinchDistance;
+            let newScale = currentScale * scale;
+            
+            // Limit the zoom: don't let it shrink smaller than 1x, or grow larger than 4x
+            newScale = Math.min(Math.max(1, newScale), 4);
+            
+            // Apply the visual scale
+            image.style.transform = `scale(${newScale})`;
+        }
+    });
+
+    image.addEventListener('touchend', (e) => {
+        // When they lift a finger, save the current zoom level so the next pinch starts from here
+        if (e.touches.length < 2) {
+            const transform = image.style.transform;
+            if (transform) {
+                const match = transform.match(/scale\(([^)]+)\)/);
+                if (match) currentScale = parseFloat(match[1]);
+            }
+            initialPinchDistance = null;
+        }
+    });
+    // --- END PINCH-TO-ZOOM LOGIC ---
   container.append(image, controls);
   document.body.append(container);
   controls.append(trash);

@@ -181,6 +181,8 @@ body {
   max-height: 80vh;
   object-fit: contain;
   border-radius: 15px;
+  touch-action: none;
+  transition: transform 0.1s ease-out;
 }
 .preview_controls {
   position: fixed;
