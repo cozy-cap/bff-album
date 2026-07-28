@@ -284,7 +284,8 @@ body {
 @media (max-width: 469px) {
   .main_card,
   .main_card-add {
-    width: 100px;
+    width: 100%;
+    border-radius: 15px;
   }
   .preview_controls,
   .adding {
