@@ -154,17 +154,20 @@ body {
   width: 64px;
   height: 64px;
   position: fixed;
-  right: 50px;
-  bottom: 50px;
+  right: 20px;
+  bottom: 20px;
   z-index: 1000;
   cursor: pointer;
-  opacity: 0.3;
+  border: solid 3px var(--accent-color-main);
+  background: transparent;
 }
 .adding:hover {
-  opacity: 1;
+  background: var(--accent-color-main);
 }
 .adding_icon {
-  fill: var(--accent-color-main);
+  stroke: var(--accent-color-main);
+}
+.adding:hover .adding_icon {
   stroke: var(--background-second);
 }
 /* Preview */
@@ -191,8 +194,8 @@ body {
 }
 .preview_controls {
   position: fixed;
-  bottom: 50px;
-  right: 50px;
+  bottom: 20px;
+  right: 20px;
   z-index: 1000;
 }
 .bi.bi-trash::before {
