@@ -28,11 +28,11 @@ body {
 /* Header */
 .header {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   gap: 20px;
   padding: 0px 20px;
   box-sizing: border-box;
-  grid-template-areas: "logo themeIcon";
+  grid-template-areas: "logo adding themeIcon";
   justify-items: right;
   align-items: center;
   position: fixed;
@@ -56,6 +56,9 @@ body {
 }
 .header_logo:hover {
   color: oklch(from var(--accent-color-main) calc(l + 0.15) c h)
+}
+.header_adding {
+  grid-area: adding;
 }
 .header_theme-icon_button1,
 .header_theme-icon_button2 {
