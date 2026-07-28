@@ -159,7 +159,7 @@ body {
   z-index: 1000;
   cursor: pointer;
   border: solid 3px var(--accent-color-main);
-  background: var(--background-second);
+  background: var(--background-main);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -172,15 +172,15 @@ body {
   stroke: var(--accent-color-main);
 }
 .adding:hover .adding_icon {
-  stroke: var(--background-second);
+  stroke: var(--background-main);
 }
 /* Preview */
 .preview_container {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  right: 0;
+  bottom: 0;
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -200,7 +200,7 @@ body {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1000;
+  z-index: 1001;
 }
 .bi.bi-trash::before {
   display: inline-block;
@@ -211,7 +211,7 @@ body {
   align-items: center;
   width: 46px;
   height: 46px;
-  background: transparent;
+  background: var(--background-main);
   border-radius: var(--border-radius);
   border: solid 3px var(--accent-color-main);
   font-size: 21pt;
