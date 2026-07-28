@@ -28,10 +28,13 @@ body {
 /* Header */
 .header {
   display: grid;
-  grid-template-columns: 20px auto 1fr 20px;
-  grid-template-areas: ". logo themeIcon .";
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  padding: 0px 20px;
+  box-sizing: border-box;
+  grid-template-areas: "logo themeIcon";
   justify-items: right;
-  align-items: flex-start;
+  align-items: center;
   position: fixed;
   top: 0;
   z-index: 1000;
@@ -63,8 +66,8 @@ body {
   border: none;
   border-radius: 100%;
   cursor: pointer;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
 }
 .header_theme-icon {
   grid-area: themeIcon;
@@ -223,21 +226,61 @@ body {
   background-color: rgba(0, 0, 0, 0.2);
 }
 .confirm_container {
-  width: 400px;
-  height: 200px;
+  width: 300px;
+  height: fit-content;
   background: var(--background-second);
   border-radius: 15px;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 10px;
   justify-content: center;
-  align-items: center;
+  padding: 10px;
 }
 .confirm_container_text {
   text-align: center;
   color: var(--accent-color-main);
 }
-@media (min-width: 425px) {
-  .header {
-    align-items: center;
+.confirm_container_buttons {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+  height: 30px;
+}
+.confirm_container_buttons_confirm,
+.confirm_container_buttons_cancel {
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+}
+.confirm_container_buttons_confirm {
+  background: var(--background-second);
+  color: oklch(from var(--accent-color-main) calc(l - 0.3) c h);
+  border-color: var(--background-second)
+}
+.confirm_container_buttons_confirm:hover {
+  color: var(--accent-color-main);
+  border-color: oklch(from var(--accent-color-main) calc(l - 0.3) c h);
+}
+.confirm_container_buttons_cancel {
+  background: var(--accent-color-main);
+  color: var(--background-second);
+  border-color: var(--accent-color-main);
+}
+.confirm_container_buttons_cancel:hover {
+  color: var(--accent-color-main);
+  border-color: oklch(from var(--accent-color-main) calc(l - 0.3) c h);
+}
+@media (max-width: 469px) {
+  .main_card,
+  .main_card-add {
+    width: 100%;
+    border-radius: 15px;
+  }
+  .adding {
+    justify-self: center;
+    margin: auto;
+    left: 0;
+    right: 0;
+
   }
 }
