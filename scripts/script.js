@@ -219,7 +219,9 @@ function openCard(element) {
   const trash = document.createElement('i');
   controls.className = 'preview_controls';
   trash.className = 'bi bi-trash';
-  trash.onclick = () => confirmDel();
+  const fileId = element.dataset.fileId; // Get the ID we stored earlier
+  // Pass the ID, the main grid card, and the preview overlay to the confirm function
+  trash.onclick = () => confirmDel(fileId, element, container);
   container.className = 'preview_container';
   container.onclick = (e) => {
     if (e.target === container) {
@@ -279,25 +281,64 @@ function openCard(element) {
   document.body.append(container);
   controls.append(trash);
 }
-function confirmDel() {
+function confirmDel(fileId, mainCardElement, previewElement) {
   const wrap = document.createElement('div');
   const container = document.createElement('div');
   const text = document.createElement('span');
   const buttons = document.createElement('div');
   const cancel = document.createElement('button');
   const confirm = document.createElement('button');
+  
   wrap.className = 'confirm_wrap';
   wrap.onclick = (e) => {
     if (e.target === wrap) {
       wrap.remove();
     }
   };
+  
   container.className = 'confirm_container';
   text.className = 'confirm_container_text';
   text.textContent = 'Do you really want to delete this image?';
+  
   buttons.className = 'confirm_container_buttons';
+  
   cancel.className = 'confirm_container_buttons_cancel';
-  confirm.className = 'confirm_container_buttons_confim,';
+  cancel.textContent = 'Cancel'; // Added text
+  
+  confirm.className = 'confirm_container_buttons_confirm'; // Fixed typo here (was confim,)
+  confirm.textContent = 'Delete'; // Added text
+  
+  // 1. Logic for Cancel Button
+  cancel.onclick = () => wrap.remove();
+  
+  // 2. Logic for Confirm Button
+  confirm.onclick = async () => {
+    confirm.textContent = 'Deleting...';
+    confirm.disabled = true;
+    
+    try {
+      // Ask Vercel to delete the file from ImageKit
+      const response = await fetch(`https://bff-album.vercel.app/api/delete-image?fileId=${fileId}`, { 
+        method: 'DELETE' 
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete on server');
+
+      // If successful, remove the HTML elements from the screen
+      if (mainCardElement) mainCardElement.remove();
+      if (previewElement) previewElement.remove();
+      wrap.remove();
+      
+      // Check if the grid is now empty
+      newFunc(); 
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert("Failed to delete the image.");
+      confirm.textContent = 'Delete';
+      confirm.disabled = false;
+    }
+  };
+
   document.body.append(wrap);
   wrap.append(container);
   container.append(text, buttons);
