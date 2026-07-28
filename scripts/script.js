@@ -24,7 +24,10 @@ function newFunc() {
 document.addEventListener('DOMContentLoaded', load_js);
 document.addEventListener('DOMContentLoaded', setTheme);
 document.addEventListener('DOMContentLoaded', newFunc);
-
+document.addEventListener('DOMContentLoaded', () => {
+  const themeBtns = document.querySelectorAll('.header_theme_icon_button1, .header_theme_icon_button2');
+  themeBtns.forEach(btn => btn.addEventListener('click', changeTheme));
+});
 // SetTheme
 function setTheme() {
   const theme = getCookie("theme") || "light";
