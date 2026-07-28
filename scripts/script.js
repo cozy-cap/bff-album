@@ -129,7 +129,7 @@ function confirmDel() {
 }
 function addCard() {
   const parent = document.querySelector('.main');
-  const card = document.newElement('div');
+  const card = document.createElement('div');
   card.className = 'main_card';
   card.onclick = (e) => {
     if (e.target === card) {
