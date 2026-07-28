@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         };
         // Upload to ImageKit
-        imageUpload(file, fileName);
+        uploadImage(file, fileName);
         // Append to UI
         if (parent) {
           parent.append(card);
