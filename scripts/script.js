@@ -29,6 +29,35 @@ document.addEventListener('DOMContentLoaded', () => {
   if (themeBtns.length === 2) themeBtns.forEach(btn => btn.addEventListener('click', changeTheme));
   const addBtns = document.querySelectorAll('.adding, .main_card-add');
   if (addBtns.length !== 0) addBtns.forEach(btn => btn.addEventListener('click', addCard));
+  const fileInput = document.querySelector('#fileID');
+  if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+      const parent = document.querySelector('.main');
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileName = file.name;
+        // Create card element
+        const card = document.createElement('div');
+        card.className = 'main_card ' + fileName;
+        // Click to open modal preview
+        card.onclick = (event) => {
+          if (event.target === card) {
+            openCard(card);
+          }
+        };
+        // Upload to ImageKit
+        imageUpload(file, fileName);
+        // Append to UI
+        if (parent) {
+          parent.append(card);
+        }
+      }
+      // Reset input value so selecting the same file again triggers 'change'
+      fileInput.value = '';
+    });
+  }
 });
 // SetTheme
 function setTheme() {
@@ -129,30 +158,9 @@ function confirmDel() {
 }
 function addCard() {
   const input = document.querySelector('#fileID');
-  const parent = document.querySelector('.main');
-  const card = document.createElement('div');
-  input.click;
-  input.addEventListener('change', function (e) {
-    for (let i = 0; i < input.files.length; i++) {
-      var fileName = e.target.files[i].name;
-      card.className = 'main_card_' + fileName;
-      imageUpload(input.files[i], fileName);
-      card.onclick = (e) => {
-        if (e.target === card) {
-          openCard(card);
-        }
-      };
-      parent.append(card);
-    }
-  })
-  /*card.className = 'main_card' + name;
-  card.onclick = (e) => {
-    if (e.target === card) {
-      openCard(card);
-    }
-  };
-  applyImage(card);
-  parent.append(card);*/
+  if (input) {
+    input.click(); // Simply open the file dialog
+  }
 }
 function applyImage(card) {
   //TODO: make read image from imagekit
