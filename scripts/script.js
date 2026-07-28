@@ -231,52 +231,109 @@ function openCard(element) {
   image.className = 'preview_image';
   image.src = cleanUrl;
   // --- START PINCH-TO-ZOOM LOGIC ---
-    let currentScale = 1;
-    let initialPinchDistance = null;
+  let currentScale = 1;
+  let initialPinchDistance = null;
+  let initialX = null;
+  let initialY = null;
+  let lastX = 0;
+  let lastY = 0;
 
-    image.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-            e.preventDefault(); // Stop any leftover browser behavior
-            // Calculate the initial distance between the two fingers
-            initialPinchDistance = Math.hypot(
-                e.touches[0].clientX - e.touches[1].clientX,
-                e.touches[0].clientY - e.touches[1].clientY
-            );
-        }
-    });
+  image.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault(); // Stop any leftover browser behavior
+      // Calculate the initial distance between the two fingers
+      initialPinchDistance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    } else if (e.touches.length === 1) {
+      // 1 Finger: Setup Panning
+      initialX = e.touches[0].clientX;
+      initialY = e.touches[0].clientY;
+    }
+  });
 
-    image.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2 && initialPinchDistance !== null) {
-            e.preventDefault();
-            // Calculate how far the fingers have moved apart/together
-            const currentDistance = Math.hypot(
-                e.touches[0].clientX - e.touches[1].clientX,
-                e.touches[0].clientY - e.touches[1].clientY
-            );
+  image.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2 && initialPinchDistance !== null) {
+      e.preventDefault();
+      // Calculate how far the fingers have moved apart/together
+      const currentDistance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
             
-            const scale = currentDistance / initialPinchDistance;
-            let newScale = currentScale * scale;
+      const scale = currentDistance / initialPinchDistance;
+      let newScale = currentScale * scale;
             
-            // Limit the zoom: don't let it shrink smaller than 1x, or grow larger than 4x
-            newScale = Math.min(Math.max(1, newScale), 4);
+      // Limit the zoom: don't let it shrink smaller than 1x, or grow larger than 4x
+      newScale = Math.min(Math.max(1, newScale), 4);
             
             // Apply the visual scale
-            image.style.transform = `scale(${newScale})`;
-        }
-    });
+      image.style.transform = `scale(${newScale})`;
+    } else if (e.touches.length === 1 && initialX !== null && initialY !== null) {
+      // 1 Finger: Handle Pan (Only if zoomed in)
+      const transform = image.style.transform;
+      let activeScale = 1;
+        
+      // Read the current scale from the CSS
+      if (transform) {
+        const match = transform.match(/scale\(([^)]+)\)/);
+        if (match) activeScale = parseFloat(match[1]);
+      }
+          
+      if (activeScale > 1) {
+        // Calculate how far the finger moved
+        const deltaX = e.touches[0].clientX - initialX;
+        const deltaY = e.touches[0].clientY - initialY;
+              
+        let newX = lastX + deltaX;
+        let newY = lastY + deltaY;
+              
+        // Calculate screen limits so the image doesn't fly off the screen
+        const maxX = Math.max(0, (image.clientWidth * activeScale - window.innerWidth) / 2);
+        const maxY = Math.max(0, (image.clientHeight * activeScale - window.innerHeight) / 2);
+              
+        // Clamp the movement to the limits
+        newX = Math.min(Math.max(newX, -maxX), maxX);
+        newY = Math.min(Math.max(newY, -maxY), maxY);
+            
+        // Apply the movement
+        image.style.transform = `translate(${newX}px, ${newY}px) scale(${activeScale})`;
+      }
+    }
+  });
 
-    image.addEventListener('touchend', (e) => {
-        // When they lift a finger, save the current zoom level so the next pinch starts from here
-        if (e.touches.length < 2) {
-            const transform = image.style.transform;
-            if (transform) {
-                const match = transform.match(/scale\(([^)]+)\)/);
-                if (match) currentScale = parseFloat(match[1]);
-            }
-            initialPinchDistance = null;
+  image.addEventListener('touchend', (e) => {
+    const transform = image.style.transform;
+    if (transform) {
+      const scaleMatch = transform.match(/scale\(([^)]+)\)/);
+      if (scaleMatch) currentScale = parseFloat(scaleMatch[1]);
+          
+        const translateMatch = transform.match(/translate\(([^p]+)px,\s*([^p]+)px\)/);
+        if (translateMatch) {
+          lastX = parseFloat(translateMatch[1]);
+          lastY = parseFloat(translateMatch[2]);
         }
-    });
-    // --- END PINCH-TO-ZOOM LOGIC ---
+      }
+      
+      // Reset 1-finger tracking
+      if (e.touches.length === 0) {
+        initialX = null;
+        initialY = null;
+      }
+      
+      // Reset pinch distance if there are less than 2 fingers
+      if (e.touches.length < 2) {
+        initialPinchDistance = null;
+      }
+      
+      // Snap the image back to the exact center if the user zooms back out to 1x
+      if (currentScale <= 1) {
+        lastX = 0;
+        lastY = 0;
+        image.style.transform = `translate(0px, 0px) scale(1)`;
+      }
+  });    // --- END PINCH-TO-ZOOM LOGIC ---
   container.append(image, controls);
   document.body.append(container);
   controls.append(trash);
