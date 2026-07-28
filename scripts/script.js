@@ -133,7 +133,7 @@ function addCard() {
   const card = document.createElement('div');
   input.click;
   input.addEventListener('change', function (e) {
-    for (i = 0, i < input.files.length, i++) {
+    for (let i = 0; i < input.files.length; i++) {
       var fileName = e.target.files[i].name;
       card.className = 'main_card_' + fileName;
       imageUpload(input.files[i], fileName);
