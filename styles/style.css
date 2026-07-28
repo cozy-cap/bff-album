@@ -54,6 +54,18 @@ body {
 .header_logo:hover {
   color: oklch(from var(--accent-color-main) calc(l + 0.15) c h)
 }
+.header_theme-icon_button1,
+.header_theme-icon_button2 {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+  width: 42px;
+  height: 42px;
+}
 .header_theme-icon {
   grid-area: themeIcon;
   margin: 10px 0;
