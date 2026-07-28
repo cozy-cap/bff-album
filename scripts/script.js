@@ -1,5 +1,50 @@
 import ImageKit from "https://esm.sh/imagekit-javascript";
 
+function setupUploadTriggers() {
+  const fileInput = document.querySelector('#fileID');
+  const addBtns = document.querySelectorAll('.adding, .main_card-add');
+  // 1. Bind the plus buttons to open the file selector
+  if (addBtns.length !== 0) {
+    addBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (fileInput) fileInput.click();
+      });
+    });
+  }
+  // 2. Handle the file selection and trigger the upload
+  if (fileInput) {
+    fileInput.addEventListener('change', async (e) => {
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+      // Loop through all selected files and upload them
+      for (let i = 0; i < files.length; i++) {
+        await uploadImage(files[i]);
+      }     
+      // Reset the input value so you can select the same file again later if needed
+      fileInput.value = '';
+    });
+  }
+}
+// Helper function to build the HTML card dynamically
+function createCard(url, fileId) {
+    const parent = document.querySelector('.main');
+    const addButton = document.querySelector('.main_card-add');
+    const card = document.createElement('div');
+    card.className = 'main_card';
+    card.style.backgroundImage = `url('${url}')`;
+    card.dataset.fileId = fileId; // Store the ID for the delete function later!
+    // Click to open modal preview
+    card.onclick = (event) => {
+        if (event.target === card) {
+            openCard(card);
+        }
+    };   
+    // Insert the new card into the grid right before the "Add" button
+    if (parent && addButton) {
+        parent.insertBefore(card, addButton);
+    }
+}
+
 async function load_js() {
     // Run your existing function to bind the upload buttons
     setupUploadTriggers(); 
@@ -42,44 +87,18 @@ function newFunc() {
     element2.style.setProperty('display', 'none');
   }
 }
+
 document.addEventListener('DOMContentLoaded', () => {
-  load_js();
   setTheme();
-  newFunc();
+  
+  // Bind the theme buttons
   const themeBtns = document.querySelectorAll('.header_theme-icon_button1, .header_theme-icon_button2');
   if (themeBtns.length === 2) themeBtns.forEach(btn => btn.addEventListener('click', changeTheme));
-  const addBtns = document.querySelectorAll('.adding, .main_card-add');
-  if (addBtns.length !== 0) addBtns.forEach(btn => btn.addEventListener('click', addCard));
-  const fileInput = document.querySelector('#fileID');
-  if (fileInput) {
-    fileInput.addEventListener('change', (e) => {
-      const parent = document.querySelector('.main');
-      const files = e.target.files;
-      if (!files || files.length === 0) return;
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const fileName = file.name;
-        // Create card element
-        const card = document.createElement('div');
-        card.className = 'main_card ' + fileName;
-        // Click to open modal preview
-        card.onclick = (event) => {
-          if (event.target === card) {
-            openCard(card);
-          }
-        };
-        // Upload to ImageKit
-        uploadImage(file);
-        // Append to UI
-        if (parent) {
-          parent.append(card);
-        }
-      }
-      // Reset input value so selecting the same file again triggers 'change'
-      fileInput.value = '';
-    });
-  }
+  
+  // Load the images from Vercel and bind the upload buttons
+  load_js(); 
 });
+
 // SetTheme
 function setTheme() {
   const theme = getCookie("theme") || "light";
