@@ -150,13 +150,10 @@ body {
   user-select: none;
 }
 /* Adding */
-.adding {
+.header_adding,
+.body_adding {
   width: 40px;
   height: 40px;
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 1000;
   cursor: pointer;
   border: solid 3px var(--accent-color-main);
   background: var(--background-main);
@@ -165,14 +162,23 @@ body {
   align-items: center;
   border-radius: var(--border-radius);
 }
-.adding:hover {
+.header_adding:hover,
+.body_adding:hover {
   background: var(--accent-color-main);
 }
-.adding_icon {
+.header_adding_icon,
+.body_adding_icon {
   stroke: var(--accent-color-main);
 }
-.adding:hover .adding_icon {
+.header_adding:hover .header_adding_icon,
+.body_adding:hover .body_adding_icon {
   stroke: var(--background-main);
+}
+.body_adding {
+  position: fixed;
+  bottom: 20px;
+  z-index: 1000;
+  display: none;
 }
 /* Preview */
 .preview_container {
@@ -209,8 +215,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   background: var(--background-main);
   border-radius: var(--border-radius);
   border: solid 3px var(--accent-color-main);
@@ -290,7 +296,11 @@ body {
     border-radius: 15px;
   }
   .preview_controls,
-  .adding {
+  .header_adding {
+    display: none;
+  }
+  .body_adding {
+    display: flex;
     justify-self: center;
     margin: auto;
     left: 0;
