@@ -1,5 +1,55 @@
 import ImageKit from "https://esm.sh/imagekit-javascript";
 
+// Helper function to compress images before uploading
+function compressImage(file, maxWidth = 1920, maxHeight = 1920, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      
+      img.onload = () => {
+        // Calculate new dimensions while keeping the aspect ratio
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+
+        // Draw the resized image onto a hidden HTML canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert the canvas back into a file we can upload
+        canvas.toBlob((blob) => {
+          if (blob) {
+            // Re-create the file object with the new compressed data
+            const compressedFile = new File([blob], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+            resolve(compressedFile);
+          } else {
+            reject(new Error("Canvas compression failed"));
+          }
+        }, 'image/jpeg', quality);
+      };
+      
+      img.onerror = (error) => reject(error);
+    };
+    
+    reader.onerror = (error) => reject(error);
+  });
+}
+
 function setupUploadTriggers() {
   const fileInput = document.querySelector('#fileID');
   const addBtns = document.querySelectorAll('.adding, .main_card-add');
@@ -18,7 +68,17 @@ function setupUploadTriggers() {
       if (!files || files.length === 0) return;
       // Loop through all selected files and upload them
       for (let i = 0; i < files.length; i++) {
-        await uploadImage(files[i]);
+        try {
+          // 1. Compress the image (max 1920x1920 pixels, 80% JPEG quality)
+          console.log(`Compressing ${files[i].name}...`);
+          const compressedFile = await compressImage(files[i], 1920, 1920, 0.8);
+          
+          // 2. Upload the new, compressed version instead of the massive original
+          await uploadImage(compressedFile);
+        } catch (error) {
+          console.error("Failed to compress or upload:", error);
+          alert(`Failed to process ${files[i].name}`);
+        }
       }     
       // Reset the input value so you can select the same file again later if needed
       fileInput.value = '';
