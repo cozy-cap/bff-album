@@ -26,7 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setTheme();
   newFunc();
   const themeBtns = document.querySelectorAll('.header_theme-icon_button1, .header_theme-icon_button2');
-  themeBtns.forEach(btn => btn.addEventListener('click', changeTheme));
+  if (themeBtns.length === 2) themeBtns.forEach(btn => btn.addEventListener('click', changeTheme));
+  const addBtns = document.querySelectorAll('.adding, .main_card-add');
+  if (addBtns.length !== 0) addBtns.forEach(btn => btn.addEventListener('click', addCard));
 });
 // SetTheme
 function setTheme() {
@@ -136,4 +138,8 @@ function addCard() {
   };
   applyImage(card);
   parent.append(card);
+}
+function applyImage(card) {
+  //TODO: make read image from imagekit
+  card.style.backgroundImage = `url('https://i.pinimg.com/1200x/aa/b5/a0/aab5a0470f6c56f2504574cfe246f918.jpg')`;
 }
