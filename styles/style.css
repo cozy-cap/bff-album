@@ -209,16 +209,18 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 64px;
-  height: 64px;
+  width: 46px;
+  height: 46px;
   background: transparent;
   border-radius: var(--border-radius);
-  font-size: 30pt;
+  border: solid 3px var(--accent-color-main);
+  font-size: 21pt;
   color: var(--accent-color-main);
   line-height: 1;
   cursor: pointer;
 }
 .bi.bi-trash:hover {
+  border-color: var(--warn-color);
   background: var(--warn-color);
   color: var(--background-main);
 }
