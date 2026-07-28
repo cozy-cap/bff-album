@@ -132,10 +132,11 @@ function addCard() {
   const parent = document.querySelector('.main');
   const card = document.createElement('div');
   input.click;
-  input.addEventListener('change', function() => {
+  input.addEventListener('change', function (e) => {
     for (i = 0, i < input.files.length, i++) {
-      card.className = 'main_card_' + input.files[i].name;
-      imageUpload(input.files[i], input.files[i].name);
+      var fileName = e.target.files[i].name;
+      card.className = 'main_card_' + fileName;
+      imageUpload(input.files[i], fileName);
       card.onclick = (e) => {
         if (e.target === card) {
           openCard(card);
