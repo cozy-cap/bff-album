@@ -159,7 +159,7 @@ body {
   z-index: 1000;
   cursor: pointer;
   border: solid 3px var(--accent-color-main);
-  background: transparent;
+  background: var(--background-second);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -284,8 +284,7 @@ body {
 @media (max-width: 469px) {
   .main_card,
   .main_card-add {
-    width: 100%;
-    border-radius: 15px;
+    width: 100px;
   }
   .preview_controls,
   .adding {
