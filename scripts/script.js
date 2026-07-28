@@ -229,9 +229,7 @@ function openCard(element) {
       container.remove();
     }
   };
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' || e.key === 'Esc')
-  });
+  closePopUp(container);
   image.className = 'preview_image';
   image.src = cleanUrl;
   // --- START PINCH-TO-ZOOM LOGIC ---
@@ -356,6 +354,7 @@ function confirmDel(fileId, mainCardElement, previewElement) {
       wrap.remove();
     }
   };
+  closePopUp(wrap);
   
   container.className = 'confirm_container';
   text.className = 'confirm_container_text';
@@ -442,4 +441,12 @@ async function uploadImage(file) {
       console.error("Upload failed:", error);
       alert("Failed to upload image.");
   }
+}
+
+function closePopUp(container) {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      container.remove();
+    }
+  });
 }
