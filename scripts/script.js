@@ -70,10 +70,11 @@ function setupUploadTriggers() {
       for (let i = 0; i < files.length; i++) {
         try {
           // 1. Compress the image (max 1920x1920 pixels, 80% JPEG quality)
+          let compressedFile:
           if (files[i].type !== 'image/gif') {
             console.log(`Compressing ${files[i].name}...`);
-            const compressedFile = await compressImage(files[i], 1920, 1920, 0.8);
-          } else const compressedFile = files[i];
+            compressedFile = await compressImage(files[i], 1920, 1920, 0.8);
+          } else compressedFile = files[i];
           // 2. Upload the new, compressed version instead of the massive original
           await uploadImage(compressedFile);
         } catch (error) {
