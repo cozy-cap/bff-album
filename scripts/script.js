@@ -128,18 +128,47 @@ function confirmDel() {
   buttons.append(cancel, confirm);
 }
 function addCard() {
+  const input = document.querySelector('#fileID');
   const parent = document.querySelector('.main');
   const card = document.createElement('div');
-  card.className = 'main_card';
+  input.click;
+  input.addEventListener('change', function() => {
+    for (i = 0, i < input.files.length, i++) {
+      card.className = 'main_card_' + input.files[i].name;
+      imageUpload(input.files[i], input.files[i].name);
+      card.onclick = (e) => {
+        if (e.target === card) {
+          openCard(card);
+        }
+      };
+      parent.append(card);
+    }
+  })
+  /*card.className = 'main_card' + name;
   card.onclick = (e) => {
     if (e.target === card) {
       openCard(card);
     }
   };
   applyImage(card);
-  parent.append(card);
+  parent.append(card);*/
 }
 function applyImage(card) {
   //TODO: make read image from imagekit
   card.style.backgroundImage = `url('https://i.pinimg.com/1200x/aa/b5/a0/aab5a0470f6c56f2504574cfe246f918.jpg')`;
+}
+imageUpload(file, name) {
+  var imagekit = new ImageKit({
+    publicKey: "public_+bidkA27fJVGrKKq8xYge8xiSOU=",
+    urlEndpoint: "https://ik.imagekit.io/cozycap",
+  });
+  imagekit.upload({
+    file: file,
+    fileName: name,
+    expire: 1616161616,
+  }).then(result => {
+    console.log(result);
+  }).catch(error => {
+    console.error(error);
+  });
 }
