@@ -73,7 +73,7 @@ function setupUploadTriggers() {
           if (files[i].type !== 'image/gif') {
             console.log(`Compressing ${files[i].name}...`);
             const compressedFile = await compressImage(files[i], 1920, 1920, 0.8);
-          }
+          } else const compressedFile = files[i];
           // 2. Upload the new, compressed version instead of the massive original
           await uploadImage(compressedFile);
         } catch (error) {
