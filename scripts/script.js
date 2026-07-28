@@ -1,11 +1,32 @@
 import ImageKit from "https://esm.sh/imagekit-javascript";
 
-function load_js() {
-  let elements = document.querySelectorAll(".main_card");
-  elements.forEach(element => {
-    let randomSeed = Math.random();
-    element.style.backgroundImage = `url('https://i.pinimg.com/1200x/aa/b5/a0/aab5a0470f6c56f2504574cfe246f918.jpg')`;
-  });
+async function load_js() {
+    // Run your existing function to bind the upload buttons
+    setupUploadTriggers(); 
+    try {
+        // 1. Ask your Vercel backend for the list of images
+        const response = await fetch('https://bff-album.vercel.app/api/get-images');
+        const images = await response.json();
+        const parent = document.querySelector('.main');
+        const addButton = document.querySelector('.main_card-add');
+        // 2. Loop through every image returned by ImageKit
+        images.forEach(img => {
+            const card = document.createElement('div');
+            card.className = 'main_card';
+            // Set the background image to the URL from ImageKit
+            card.style.backgroundImage = `url('${img.url}')`;
+            // IMPORTANT: Save the fileId inside the HTML for when we build the delete function!
+            card.dataset.fileId = img.fileId; 
+            // Attach your existing openCard click event
+            card.onclick = () => openCard(card);
+            // Insert the new card into the grid right before the "Add" button
+            parent.insertBefore(card, addButton);
+        });
+        // Update the "Storage is empty" text
+        newFunc(); 
+    } catch (error) {
+        console.error("Failed to load images from backend:", error);
+    }
 }
 
 function newFunc() {
