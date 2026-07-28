@@ -166,18 +166,27 @@ function applyImage(card) {
   //TODO: make read image from imagekit
   card.style.backgroundImage = `url('https://i.pinimg.com/1200x/aa/b5/a0/aab5a0470f6c56f2504574cfe246f918.jpg')`;
 }
-function imageUpload(file, name) {
-  var imagekit = new ImageKit({
-    publicKey: "public_+bidkA27fJVGrKKq8xYge8xiSOU=",
-    urlEndpoint: "https://ik.imagekit.io/cozycap",
-  });
-  imagekit.upload({
-    file: file,
-    fileName: name,
-    expire: 1616161616,
-  }).then(result => {
-    console.log(result);
-  }).catch(error => {
-    console.error(error);
-  });
+async function uploadImage(file) {
+    try {
+        // 1. Ask your Vercel backend for the secure tokens
+        // REPLACE THIS with the Production URL Vercel gave you in Step 3!
+        const authResponse = await fetch('https://bff-album.vercel.app/api/auth'); 
+        const authData = await authResponse.json();
+
+        // 2. Upload to ImageKit using those secure parameters
+        const result = await imagekit.upload({
+            file: file,
+            fileName: file.name,
+            tags: ["bff-album"],
+            signature: authData.signature,
+            token: authData.token,
+            expire: authData.expire
+        });
+
+        createCard(result.url, result.fileId);
+        newFunc(); 
+    } catch (error) {
+        console.error("Upload failed:", error);
+        alert("Failed to upload image.");
+    }
 }
