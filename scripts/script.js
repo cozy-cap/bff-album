@@ -445,6 +445,7 @@ async function uploadImage(file) {
 }
 
 function closePopUp(container) {
+  document.addEventListener('backbutton', container.remove, false);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' || e.key === 'Esc') {
       container.remove();
