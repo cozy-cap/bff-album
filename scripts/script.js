@@ -52,7 +52,7 @@ function compressImage(file, maxWidth = 1920, maxHeight = 1920, quality = 0.8) {
 
 function setupUploadTriggers() {
   const fileInput = document.querySelector('#fileID');
-  const addBtns = document.querySelectorAll('.adding, .main_card-add');
+  const addBtns = document.querySelectorAll('.body_adding, .header_adding, .main_card-add');
   // 1. Bind the plus buttons to open the file selector
   if (addBtns.length !== 0) {
     addBtns.forEach(btn => {
