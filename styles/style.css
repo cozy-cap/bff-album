@@ -298,10 +298,10 @@ body {
     width: 100%;
     border-radius: 15px;
   }
-  .preview_controls,
   .header_adding {
     display: none;
   }
+  .preview_controls,
   .body_adding {
     display: flex;
     justify-self: center;
